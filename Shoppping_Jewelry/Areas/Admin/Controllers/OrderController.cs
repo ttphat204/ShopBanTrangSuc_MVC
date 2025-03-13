@@ -1,0 +1,122 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Shoppping_Jewelry.Models;
+using Shoppping_Jewelry.Repository;
+
+namespace Shoppping_Jewelry.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    [Authorize]
+
+    public class OrderController : Controller
+    {
+        private readonly DataContext _dataContext;
+
+        public OrderController(DataContext context)
+        {
+            _dataContext = context;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index(int pg = 1)
+        {
+            const int pageSize = 10; // Số đơn hàng mỗi trang
+            if (pg < 1) pg = 1; // Đảm bảo trang không nhỏ hơn 1
+
+            // Lấy danh sách đơn hàng với sắp xếp
+            var ordersQuery = _dataContext.Orders
+                .OrderByDescending(p => p.Id);
+
+            // Tính tổng số đơn hàng
+            int totalOrders = await ordersQuery.CountAsync();
+
+            // Tạo đối tượng Paginate
+            var pager = new Paginate(totalOrders, pg, pageSize);
+
+            // Tính số đơn hàng cần bỏ qua và lấy dữ liệu phân trang
+            int skipItems = (pg - 1) * pageSize;
+            var orders = await ordersQuery
+                .Skip(skipItems)
+                .Take(pager.PageSize)
+                .ToListAsync();
+
+            // Gán pager vào ViewBag để truyền sang view
+            ViewBag.Pager = pager;
+
+            return View(orders);
+        }
+
+        [HttpGet]
+        [Route("ViewOrder")]
+        public async Task<IActionResult> ViewOrder(string ordercode)
+        {
+            var DetailsOrder = await _dataContext.OrderDetails
+                .Include(od => od.Product)
+                .Where(od => od.OrderCode == ordercode)
+                .ToListAsync();
+
+            var Order = _dataContext.Orders
+                .Where(o => o.OrderCode == ordercode)
+                .First();
+
+            ViewBag.Status = Order.Status;
+            return View(DetailsOrder);
+        }
+
+        [HttpPost]
+        [Route("UpdateOrder")]
+        public async Task<IActionResult> UpdateOrder(string ordercode, int status)
+        {
+            var order = await _dataContext.Orders.FirstOrDefaultAsync(o => o.OrderCode == ordercode);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            order.Status = status;
+
+            try
+            {
+                await _dataContext.SaveChangesAsync();
+                return Ok(new { success = true, message = "Order status updated successfully" });
+            }
+            catch (Exception)
+            {
+
+
+                return StatusCode(500, "An error occurred while updating the order status.");
+            }
+        }
+        [HttpGet]
+        [Route("Delete")]
+        public async Task<IActionResult> Delete(string ordercode)
+        {
+            var order = await _dataContext.Orders.FirstOrDefaultAsync(o => o.OrderCode == ordercode);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+
+                //delete order
+                _dataContext.Orders.Remove(order);
+
+
+                await _dataContext.SaveChangesAsync();
+                TempData["success"] = "Đã xóa đơn hàng";
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "An error occurred while deleting the order.");
+            }
+
+        }
+
+    }
+}

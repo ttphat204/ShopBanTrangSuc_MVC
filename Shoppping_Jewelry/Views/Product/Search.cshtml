@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ProductModel>
+
+@{
+	ViewData["Title"] = @ViewBag.KeyWord;
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-sm-3">
+	@Html.Partial("_SideBar")
+</div>
+
+<div class="col-sm-9 padding-right">
+	<div class="features_items">
+		<!--features_items-->
+		@if (TempData["SuccessMessage"] != null)
+		{
+			<div id="notification" class="alert alert-success" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;">
+				@TempData["SuccessMessage"]
+			</div>
+			<script>
+				setTimeout(function() {
+					document.getElementById('notification').style.display = 'none';
+				}, 3000); // Thông báo sẽ tự động biến mất sau 3 giây
+			</script>
+		}
+		<h2 class="title text-center">@ViewBag.KeyWord</h2>
+		@foreach (var item in Model)
+		{
+
+			<div class="col-sm-4">
+				<div class="product-image-wrapper">
+					<div class="single-products">
+						<div class="productinfo text-center">
+							<td><img src="~/media/products/@item.Image" width="100%" /></td>
+							<h2>@item.Price VNĐ</h2>
+							<p>@item.Name</p>
+							<p>Danh mục: @item.Category.Name</p>
+							<p>Thương hiệu: @item.Brand.Name</p>
+							<a class="btn btn-default add-to-cart" asp-action="Add" asp-controller="Cart" asp-route-Id="@item.Id"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+						</div>
+					</div>
+					<div class="choose">
+						<ul class="nav nav-pills nav-justified">
+							<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+							<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>

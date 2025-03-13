@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["title"] - Trang quản lý Admin</title>
+
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="//cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f0f2f5;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar {
+            min-width: 250px;
+            background-color: #212529;
+            color: white;
+            transition: all 0.3s;
+            border-radius: 0 10px 10px 0;
+            padding: 20px;
+        }
+
+            .sidebar a {
+                color: white;
+                text-decoration: none;
+                padding: 12px;
+                display: block;
+                border-radius: 8px;
+                margin-bottom: 5px;
+                transition: background-color 0.3s;
+            }
+
+                .sidebar a:hover {
+                    background-color: #495057;
+                }
+
+        .content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            margin: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar {
+            background-color: #343a40;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h4 class="text-center mb-4">Admin Dashboard</h4>
+        <a asp-controller="Home"><i class="fa fa-home me-2"></i> Trang chủ</a>
+        <a asp-controller="Order"><i class="fa fa-list me-2"></i> Đơn hàng</a>
+        <a asp-controller="Product"><i class="fa fa-gem me-2"></i> Sản phẩm</a>
+        <a asp-controller="Category"><i class="fa fa-folder me-2"></i> Danh mục</a>
+        <a asp-controller="Brand"><i class="fa fa-tags me-2"></i> Thương hiệu</a>
+        <a asp-controller="User"><i class="fa fa-users me-2"></i> Người quản lý</a>
+        <a asp-controller="Role"><i class="fa fa-user-cog me-2"></i>Roles</a>
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <nav class="navbar navbar-expand navbar-dark">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">Quản lý Admin</span>
+            </div>
+        </nav>
+
+        <div class="container mt-4">
+            @Html.Partial("_Notification")
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+    <script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var table = $('#myTable').DataTable();
+            var message = '@TempData["success"]';
+            if(message != '') Swal.fire(message);
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

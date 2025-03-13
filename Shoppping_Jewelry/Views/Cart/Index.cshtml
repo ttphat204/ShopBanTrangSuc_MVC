@@ -1,0 +1,80 @@
+﻿@using Shoppping_Jewelry.Models.ViewModels
+@model CartItemViewModel
+
+<section id="cart_items">
+    @if (TempData["DelteCart"] != null)
+    {
+        <div id="notification" class="alert alert-success" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;">
+            @TempData["DelteCart"]
+        </div>
+        <script>
+            setTimeout(function() {
+                document.getElementById('notification').style.display = 'none';
+            }, 3000);
+        </script>
+    }
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="/">Trang chủ</a></li>
+                <li class="active">Giỏ hàng</li>
+            </ol>
+        </div>
+        <div class="table-responsive cart_info">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Tổng cộng</th>
+                        <th>Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.CartItems.Count > 0)
+                    {
+                        foreach (var item in Model.CartItems)
+                        {
+                            <tr>
+                                <td><img src="~/media/products/@item.Image" width="100px" height="100px" /></td>
+                                <td>@item.ProductName</td>
+                                <td>@item.Price.ToString("#,##0 VNĐ")</td>
+                                <td>
+                                    <a class="btn btn-sm btn-warning" style="width:30px;height:30px" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.ProductId">+</a>
+                                    <input type="text" style="text-align:center; width:29px;height:29px" value="@item.Quantity" readonly size="2" />
+                                    <a class="btn btn-sm btn-warning" style="width:30px;height:30px" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductId">-</a>
+                                </td>
+                                <td>@((item.Quantity * item.Price).ToString("#,##0") + " VNĐ")</td>
+                                <td><a class="btn btn-sm btn-danger" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId">Xóa</a></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="4" class="text-right"><strong>Tổng giá tiền:</strong></td>
+                            <td colspan="2">@Model.GrandTotal.ToString("#,##0") VNĐ</td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <a class="btn btn-danger" asp-controller="Cart" asp-action="Clear">Xóa tất cả</a>
+                            </td>
+                            <td colspan="3">
+                                <a class="btn btn-success" asp-controller="Checkout" asp-action="Checkout">Thanh toán</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                <h5 style="color:darkgrey">Giỏ hàng của bạn đang trống</h5>
+                                <img src="~/images/cart.gif" alt="Giỏ hàng rỗng" width="100px" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

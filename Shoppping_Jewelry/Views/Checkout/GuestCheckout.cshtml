@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Nhập Email để Đặt Hàng";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <h2 class="text-center mb-3">Nhập Email để Đặt Hàng</h2>
+
+        <form asp-action="GuestCheckout" method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label fw-bold">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required placeholder="Nhập email của bạn">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Đặt Hàng</button>
+        </form>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="text-danger mt-2 text-center">
+                @Html.ValidationSummary()
+            </div>
+        }
+    </div>
+</div>

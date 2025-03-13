@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IdentityRole
+@{
+	ViewData["title"] = "Tạo Role";
+}
+
+<h4>Tạo Role</h4>
+<div class="col-md-9">
+	<form asp-action="Create" enctype="multipart/form-data">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="form-group">
+			<label>Tên Role:	</label>
+			<input asp-for="Name" class="form-control" />
+			<span asp-validation-for="Name" class="text-danger" />
+		</div>
+		
+		<div class="form-group">
+			<button class="btn btn-success btn-priamry">Thêm Role...</button>
+		</div>
+	</form>
+	<a asp-action="Index">Quay trở lại trang trước</a>
+</div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Danh sách người dùng";
+}
+<h3>Danh sách người quản lý</h3>
+<a asp-action="Create" class="btn btn-success btn-sm" asp-controller="User">Thêm quản lý</a>
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col" style="text-align:center">Id</th>
+            <th scope="col" style="text-align:center">Tên đăng nhập</th>
+            <th scope="col" style="text-align:center">Email</th>
+            <th scope="col" style="text-align:center">Số điện thoại</th>
+            <th scope="col" style="text-align:center">Vai trò</th>
+            <th scope="col" style="text-align:center">Hành động</th>
+
+        </tr>
+    </thead>
+    <tbody style="text-align:center">
+        @{
+            int counter =1; // Khởi tạo biến đếm bắt đầu từ 1
+        }
+        @foreach (var usersWithRoles in Model)
+        {
+            <tr>
+                <td scope="row">@counter</td>
+                <td>@usersWithRoles.User.Id</td>
+                <td>@usersWithRoles.User.UserName</td>
+                <td>@usersWithRoles.User.Email</td>
+                <td>@usersWithRoles.User.PhoneNumber</td>
+                <td>
+                    @usersWithRoles.RoleName
+                </td>
+                <td>
+                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Sửa</a>
+                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="User" asp-route-Id="@usersWithRoles.User.Id">Xóa</a>
+                </td>
+            </tr>
+              counter++; // Tăng biến đếm sau mỗi hàng
+        }
+    </tbody>
+</table>
