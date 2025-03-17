@@ -21,6 +21,7 @@ namespace Shoppping_Jewelry.Repository
         public DbSet<SliderModel> Sliders { get; set; }
         public DbSet<WhistListModel> WhistLists { get; set; }
         public DbSet<CompareModel> Compares { get; set; }
+        public DbSet<StatisticalModel> Statics { get; set; }
         public DbSet<ProductQuantityModel> productQuantities { get; set; }
     }
 }

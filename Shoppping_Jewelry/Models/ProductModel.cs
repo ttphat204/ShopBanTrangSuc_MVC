@@ -13,6 +13,9 @@ namespace Shoppping_Jewelry.Models
         [Required(ErrorMessage = "Yêu cầu nhập mô tả sản phẩm")]
         [MinLength(4, ErrorMessage = "Yêu cầu nhập mô tả sản phẩm")]
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Yêu cầu nhập giá vốn")]
+        public decimal CapitalPrice { get; set; }
         public string Slug { get; set; }
 
 

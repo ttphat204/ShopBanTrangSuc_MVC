@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shoppping_Jewelry.Repository;
 
@@ -11,9 +12,11 @@ using Shoppping_Jewelry.Repository;
 namespace Shoppping_Jewelry.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250317120308_statictical")]
+    partial class statictical
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,9 +399,6 @@ namespace Shoppping_Jewelry.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("CapitalPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -543,34 +543,6 @@ namespace Shoppping_Jewelry.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sliders");
-                });
-
-            modelBuilder.Entity("Shoppping_Jewelry.Models.StatisticalModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Profit")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Revenue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Sold")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Statics");
                 });
 
             modelBuilder.Entity("Shoppping_Jewelry.Models.WhistListModel", b =>

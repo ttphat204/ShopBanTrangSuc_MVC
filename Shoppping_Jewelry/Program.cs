@@ -2,9 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Shoppping_Jewelry.Areas.Admin.Repository;
 using Shoppping_Jewelry.Models;
+using Shoppping_Jewelry.Models.Momo;
 using Shoppping_Jewelry.Repository;
+using Shoppping_Jewelry.Services.Momo;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Connect Momo
+builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+builder.Services.AddScoped<IMomoService, MomoService>();
 
 // Kết nối CSDL
 builder.Services.AddDbContext<DataContext>(options =>
@@ -25,6 +31,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromSeconds(30);
     options.Cookie.IsEssential = true;
 });
+
+
 
 builder.Services.AddIdentity<AppUserModel, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
@@ -63,7 +71,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "Areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "category",

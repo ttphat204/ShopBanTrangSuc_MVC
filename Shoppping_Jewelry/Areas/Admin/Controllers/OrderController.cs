@@ -79,7 +79,53 @@ namespace Shoppping_Jewelry.Areas.Admin.Controllers
             }
 
             order.Status = status;
-
+            _dataContext.Update(order);
+            if (status == 2)
+            {
+                var DetailsOrder = await _dataContext.OrderDetails
+                    .Include(od => od.Product)
+                    .Where(od => od.OrderCode == order.OrderCode)
+                    .Select(od => new
+                    {
+                        od.Quantity,
+                        od.Product.Price,
+                        od.Product.CapitalPrice
+                    }).ToListAsync();
+                var staticsModel = await _dataContext.Statics
+                    .FirstOrDefaultAsync(s => s.DateCreated.Date == order.CreateDate.Date);
+                if (staticsModel != null)
+                {
+                    foreach (var orderDetail in DetailsOrder)
+                    {
+                        staticsModel.Quantity += 1;
+                        staticsModel.Sold += orderDetail.Quantity;
+                        staticsModel.Revenue += orderDetail.Quantity * orderDetail.Price;
+                        staticsModel.Profit += orderDetail.Price - orderDetail.CapitalPrice;
+                    }
+                    _dataContext.Update(staticsModel);
+                }
+                else
+                {
+                    int new_quantity = 0;
+                    int new_sold = 0;
+                    decimal new_profit = 0;
+                    foreach (var orderDetail in DetailsOrder)
+                    {
+                        new_quantity += 1;
+                        new_sold += orderDetail.Quantity;
+                        new_profit += orderDetail.Price - orderDetail.CapitalPrice;
+                        staticsModel = new StatisticalModel
+                        {
+                            DateCreated = order.CreateDate,
+                            Quantity = new_quantity,
+                            Sold = new_sold,
+                            Revenue = orderDetail.Quantity * orderDetail.Price,
+                            Profit = new_profit
+                        };
+                    }
+                    _dataContext.Add(staticsModel);
+                }
+            }
             try
             {
                 await _dataContext.SaveChangesAsync();
@@ -88,10 +134,10 @@ namespace Shoppping_Jewelry.Areas.Admin.Controllers
             catch (Exception)
             {
 
-
                 return StatusCode(500, "An error occurred while updating the order status.");
             }
         }
+
         [HttpGet]
         [Route("Delete")]
         public async Task<IActionResult> Delete(string ordercode)

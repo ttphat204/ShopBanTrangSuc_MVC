@@ -165,6 +165,7 @@ namespace Shoppping_Jewelry.Area.Admin.Controllers
                 existed_Product.Name = product.Name;
                 existed_Product.Description = product.Description;
                 existed_Product.Price = product.Price;
+                existed_Product.CapitalPrice = product.CapitalPrice;
                 existed_Product.CategoryId = product.CategoryId;
                 existed_Product.BrandId = product.BrandId;
 

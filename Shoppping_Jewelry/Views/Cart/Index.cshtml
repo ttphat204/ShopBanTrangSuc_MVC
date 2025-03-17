@@ -117,6 +117,14 @@
                                 else
                                 {
                                     <a class="btn btn-success" asp-controller="Checkout" asp-action="Checkout">Thanh toán</a>
+                                    <form method="POST" asp-action="CreatePaymentMomo" asp-controller="Payment">
+                                        <input type="hidden" name="Amount" value="@Model.GrandTotal" />
+                                        <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+                                        <input type="hidden" name="OrderInfo" value="Thanh toán Momo cho đơn hàng tại cửa hàng" />
+										<input type="hidden" name="FullName" value="Tấn Phát" />
+                                        <button class="btn btn-danger" name="PayUrl" type="submit">Thanh toán Momo</button>
+                                    </form>
+
                                 }
                             </div>
                         </div>
