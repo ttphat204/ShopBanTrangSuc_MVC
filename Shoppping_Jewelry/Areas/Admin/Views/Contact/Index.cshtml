@@ -1,0 +1,174 @@
+﻿@model IEnumerable<ContactModel>
+@{
+    ViewData["title"] = "Trang thông tin liên hệ";
+    Paginate pager = new Paginate();
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+    }
+}
+
+<div class="contact-table-container">
+    <h3 class="table-title">Thông tin liên hệ</h3>
+    <table class="table table-modern" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên</th>
+                <th scope="col">Email</th>
+                <th scope="col">Mô tả</th>
+                <th scope="col">Bản đồ</th>
+                <th scope="col">Số điện thoại</th>
+                <th scope="col">Logo</th>
+                <th scope="col">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 1;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@index</td>
+                    <td>@item.Name</td>
+                    <td>@item.Email</td>
+                    <td>
+                        <div class="description-cell">
+                            @Html.Raw(item.Description)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="map-preview">
+                            @Html.Raw(item.Map)
+                        </div>
+                    </td>
+                    <td>@item.Phone</td>
+                    <td>
+                        <img src="~/media/logo/@item.LogoImage" alt="Logo" class="logo-img" />
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Contact" class="btn btn-warning btn-sm btn-action">
+                            <i class="fa fa-edit"></i> Sửa
+                        </a>
+                    </td>
+                </tr>
+                index++;
+            }
+        </tbody>
+    </table>
+
+    <partial name="_Paging" model="@pager" />
+</div>
+
+<style>
+    .contact-table-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin: 20px 0;
+    }
+
+    .table-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .table-modern {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+        .table-modern thead {
+            background-color: #2c3e50;
+            color: #ffffff;
+        }
+
+        .table-modern th,
+        .table-modern td {
+            padding: 12px 15px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 15px;
+        }
+
+        .table-modern th {
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+            .table-modern th:nth-child(4), /* Cột Mô tả */
+            .table-modern td:nth-child(4) {
+                width: 30%; /* Tăng chiều rộng cột Mô tả lên 30% */
+                max-width: 400px; /* Giới hạn tối đa để không chiếm hết bảng */
+                text-align: left; /* Căn trái để dễ đọc văn bản dài */
+                word-wrap: break-word; /* Chuyển dòng nếu văn bản quá dài */
+            }
+
+        .table-modern tbody tr {
+            border-bottom: 1px solid #dee2e6;
+            transition: background-color 0.3s ease;
+        }
+
+            .table-modern tbody tr:hover {
+                background-color: #f1f3f5;
+            }
+
+    .description-cell {
+        overflow-wrap: break-word; /* Đảm bảo văn bản dài tự động ngắt dòng */
+        white-space: normal; /* Cho phép ngắt dòng */
+    }
+
+    .map-preview iframe {
+        width: 100% !important;
+        height: 200px;
+        border-radius: 5px;
+        border: none;
+    }
+
+    .logo-img {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+    }
+
+        .logo-img:hover {
+            transform: scale(1.1);
+        }
+
+    .btn-action {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-action i {
+            font-size: 16px;
+        }
+
+    .btn-warning {
+        background-color: #f39c12;
+        border-color: #f39c12;
+        color: #ffffff;
+    }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+            border-color: #e67e22;
+        }
+
+</style>

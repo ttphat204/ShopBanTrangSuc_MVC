@@ -7,8 +7,7 @@ using Shoppping_Jewelry.Repository;
 namespace Shoppping_Jewelry.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
-
+    [Authorize(Roles = "Admin")]
     public class OrderController : Controller
     {
         private readonly DataContext _dataContext;
@@ -59,6 +58,10 @@ namespace Shoppping_Jewelry.Areas.Admin.Controllers
             var Order = _dataContext.Orders
                 .Where(o => o.OrderCode == ordercode)
                 .First();
+
+            var ShippingCost = _dataContext.Orders
+                .Where(s => s.OrderCode == ordercode).First();
+            ViewBag.ShippingCost = ShippingCost.ShippingCost;
 
             ViewBag.Status = Order.Status;
             return View(DetailsOrder);

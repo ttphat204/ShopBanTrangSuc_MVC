@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shoppping_Jewelry.Models;
+using Shoppping_Jewelry.Models.ViewModels;
 using Shoppping_Jewelry.Repository;
 
 namespace Shoppping_Jewelry.Controllers
@@ -28,7 +30,8 @@ namespace Shoppping_Jewelry.Controllers
         public async Task<IActionResult> Details(int Id)
         {
             if (Id == null) return RedirectToAction("Index");
-            var productsById = _dataContext.Products.Where(p => p.Id == Id).FirstOrDefault();
+            var productsById = _dataContext.Products.Include(p => p.Ratings)
+                .Where(p => p.Id == Id).FirstOrDefault();
 
             //Sản phẩm liên quan
             var Relative = await _dataContext.Products
@@ -37,7 +40,65 @@ namespace Shoppping_Jewelry.Controllers
                 .ToListAsync();
             ViewBag.Relative = Relative;
 
-            return View(productsById);
+            var ViewModel = new ProductDetailsViewModel
+            {
+                ProductDetails = productsById,
+
+            };
+
+            return View(ViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Comment(RatingModel rating)
+        {
+            if (ModelState.IsValid)
+            {
+                // Kiểm tra xem đã có bản ghi với ProductId này chưa
+                var existingRating = await _dataContext.Ratings
+                    .FirstOrDefaultAsync(r => r.ProductId == rating.ProductId);
+
+                if (existingRating != null)
+                {
+                    // Nếu đã có, cập nhật thông tin
+                    existingRating.Name = rating.Name;
+                    existingRating.Email = rating.Email;
+                    existingRating.Comment = rating.Comment;
+                    existingRating.Star = rating.Star;
+                    TempData["success"] = "Cảm ơn bạn đã cập nhật phản hồi!";
+                }
+                else
+                {
+                    // Nếu chưa có, thêm mới
+                    var newRating = new RatingModel
+                    {
+                        ProductId = rating.ProductId,
+                        Name = rating.Name,
+                        Email = rating.Email,
+                        Comment = rating.Comment,
+                        Star = rating.Star
+                    };
+                    _dataContext.Ratings.Add(newRating);
+                    TempData["success"] = "Cảm ơn bạn đã gửi phản hồi!";
+                }
+
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction("Details", new { Id = rating.ProductId });
+            }
+            else
+            {
+                TempData["error"] = "Vui lòng nhập đầy đủ thông tin";
+                List<string> errors = new List<string>();
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var modelError in modelState.Errors)
+                    {
+                        errors.Add(modelError.ErrorMessage);
+                    }
+                }
+                TempData["errorDetails"] = string.Join("; ", errors);
+                return RedirectToAction("Details", new { Id = rating.ProductId });
+            }
         }
     }
 }

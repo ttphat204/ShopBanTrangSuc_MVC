@@ -14,6 +14,7 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col" style="text-align:center">Mã đơn hàng</th>
+			<th scope="col" style="text-align:center">Phí vận chuyển</th>
             <th scope="col" style="text-align:center">Email khách hàng</th>
             <th scope="col" style="text-align:center">Ngày tạo đơn hàng</th>
             <th scope="col" style="text-align:center">Trạng thái đơn hàng</th>
@@ -26,6 +27,7 @@
             <tr>
                 <th scope="row">@item.Id</th>
                 <th>@item.OrderCode</th>
+                <td>@item.ShippingCost.ToString("#,##0 VNĐ")</td>
                 <td>@item.UserName</td>
                 <td>@item.CreateDate</td>
                 <td>
@@ -33,9 +35,14 @@
                     {
                         <span class="text text-success">Đơn hàng mới</span>
                     }
+                    else if (item.Status == 2)
+                    {
+                        <span class="text text-success">Đã giao hàng</span>
+                    }
                     else
                     {
-                        <span class="text text-danger">Đơn hàng thành công</span>
+
+                        <span class="text text-danger">Đã hủy</span>
                     }
                 </td>
                 <td>

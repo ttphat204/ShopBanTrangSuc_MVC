@@ -1,0 +1,25 @@
+﻿@model List<Shoppping_Jewelry.Models.AppUserModel>
+
+<h2>Danh sách người dùng</h2>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên Người Dùng</th>
+            <th>Email</th>
+            <th>Số Điện Thoại</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@Model[i].UserName</td>
+                <td>@Model[i].Email</td>
+                <td>@Model[i].PhoneNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>

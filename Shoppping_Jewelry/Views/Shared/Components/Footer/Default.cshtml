@@ -1,0 +1,106 @@
+﻿@model ContactModel
+<div class="row">
+    <div class="col-md-4 col-sm-12 footer-section">
+        <div class="footer-logo">
+            <img src="~/media/logo/@Model.LogoImage" alt="Logo" class="logo-img" />
+            <p class="description">@Html.Raw(Model.Description)</p>
+        </div>
+    </div>
+
+    <!-- Cột 2: Bản đồ -->
+    <div class="col-md-4 col-sm-12 footer-section">
+        <div class="footer-map">
+            <h5 class="section-title">Vị trí của chúng tôi</h5>
+            @Html.Raw(Model.Map)
+        </div>
+    </div>
+
+    <!-- Cột 3: Thông tin liên hệ -->
+    <div class="col-md-4 col-sm-12 footer-section">
+        <div class="footer-contact">
+            <h5 class="section-title">Liên hệ</h5>
+            <ul class="contact-info">
+                <li><i class="fa fa-store"></i> <strong>Tên cửa hàng:</strong> @Model.Name</li>
+                <li><i class="fa fa-envelope"></i> <strong>Email:</strong> @Model.Email</li>
+                <li><i class="fa fa-phone"></i> <strong>Số điện thoại:</strong> @Model.Phone</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    #footer {
+        background-color: #2c3e50; /* Màu nền tối hiện đại */
+        color: #ecf0f1; /* Màu chữ sáng */
+        padding: 5px 0;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .footer-top {
+        width: 100%;
+    }
+
+    .footer-section {
+        margin-bottom: 20px;
+        text-align: center; /* Căn giữa trên mobile */
+    }
+
+    .footer-logo .logo-img {
+        width: 120px;
+        height: 90px;
+        object-fit: contain; /* Giữ tỷ lệ ảnh */
+        margin-bottom: 15px;
+        transition: transform 0.3s ease; /* Hiệu ứng hover */
+    }
+
+        .footer-logo .logo-img:hover {
+            transform: scale(1.1); /* Phóng to nhẹ khi hover */
+        }
+
+    .description {
+        font-size: 14px;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #ffffff;
+        text-transform: uppercase;
+    }
+
+    .footer-map iframe {
+        width: 100% !important; /* Đảm bảo iframe full width trong cột */
+        height: 200px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .footer-contact .contact-info {
+        list-style: none;
+        padding: 0;
+        font-size: 15px;
+    }
+
+        .footer-contact .contact-info li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Căn giữa trên mobile */
+        }
+
+        .footer-contact .contact-info i {
+            margin-right: 10px;
+            color: #3498db; /* Màu icon nổi bật */
+            font-size: 18px;
+        }
+
+        .footer-contact .contact-info strong {
+            color: #ffffff;
+            margin-right: 5px;
+        }
+</style>
+	

@@ -13,6 +13,7 @@
 			<th scope="col" style="text-align:center">Mã đơn hàng</th>
 			<th scope="col" style="text-align:center">Tên khác hàng</th>
 			<th scope="col" style="text-align:center">Tên sản phẩm</th>
+
 			<th scope="col" style="text-align:center">Giá</th>
 			<th scope="col" style="text-align:center">Số lượng</th>
 			<th scope="col" style="text-align:center">Tổng cộng</th>
@@ -32,19 +33,23 @@
 				<td>@item.OrderCode</td>
 				<td>@item.UserName</td>
 				<td>@item.Product.Name</td>
-				<td>@item.Price</td>
-				<td>@item.Quantity</td>				
-				<td>@subtotal.ToString("C")</td>
+				<td>@item.Price.ToString(("#,##0 VNĐ"))</td>
+				<td>@item.Quantity</td>
+				<td>@subtotal.ToString("#,##0 VNĐ")</td>
 			</tr>
 		}
 		<tr>
 			<th colspan="5">Tổng cộng:</th>			
-			<td>@total.ToString("C")</td>
+			<td>@total.ToString("#,##0 VNĐ")</td>
+			<td>Phí vận chuyển: @ViewBag.ShippingCost.ToString("#,##0 VNĐ")</td>
 			<td>
-				<select class="form-control select-update-order">
-					<option value="1">Đơn hàng mới</option>
-					<option value="0">Đã xử lý</option>
-				</select>
+				@if (ViewBag.Status != 3){
+					<select class="form-control select-update-order">
+						<option value="1">Đơn hàng mới</option>
+						<option value="2">Đã xử lý</option>
+					</select>
+				}
+				
 			</td>
 		</tr>
 	</tbody>

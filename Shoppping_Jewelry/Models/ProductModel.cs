@@ -33,6 +33,11 @@ namespace Shoppping_Jewelry.Models
 
         public string Image { get; set; }
 
+        public int Quantity { get; set; }
+        public int Sold { get; set; }
+
+
+        public RatingModel Ratings { get; set; }
         [NotMapped]
         [FileExtension]
         public IFormFile? ImageUpload { get; set; }

@@ -9,8 +9,7 @@ using Shoppping_Jewelry.Repository;
 namespace Shoppping_Jewelry.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
-
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly UserManager<AppUserModel> _userManager;
@@ -33,6 +32,13 @@ namespace Shoppping_Jewelry.Areas.Admin.Controllers
                                         select new { User = u, RoleName = r.Name }).ToListAsync();
             return View(usersWithRoles);
         }
+
+        public IActionResult UserList()
+        {
+            var users = _userManager.Users.ToList();
+            return View(users);
+        }
+
         [HttpGet]
         [Route("Create")]
         public async Task<IActionResult> Create()

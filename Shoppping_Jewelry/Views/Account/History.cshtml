@@ -1,0 +1,67 @@
+﻿@model IEnumerable<OrderModel>
+
+@{
+    ViewData["Title"] = "Lịch sủ đơn hàng" + @ViewBag.UserEmail;
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+</head>
+<body>
+    <h3>Lịch sử đơn hàng: @ViewBag.UserEmail</h3>
+
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Mã đơn hàng</th>
+                <th>Phí giao hàng</th>
+                <th>Tên người đặt hàng</th>
+                <th>Trạng thái đơn hàng</th>
+                <th>Ngày</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.OrderCode</td>
+                    <td>@item.ShippingCost.ToString("#,##0 đ")</td>
+
+                    <td>@item.UserName</td>
+                    <td>
+                        @if (item.Status == 1)
+                        {
+                            <span class="text text-success">Đơn hàng mới</span>
+                        }
+                        else if (item.Status == 2)
+                        {
+                            <span class="text text-success">Đã giao hàng</span>
+                        }
+                        else{
+
+                            <span class="text text-danger">Đã hủy</span>
+                        }
+                    </td>
+                    <td>@item.CreateDate.ToString("dd-MM-yyyy")</td>
+                    <td>
+                        @if (item.Status != 3)
+                        {
+                            <a onclick="return confirm('Bạn xác nhận muốn hủy?')" class="btn btn-warning btn-sm" asp-action="CancelOrder" asp-controller="Account" asp-route-ordercode="@item.OrderCode">Hủy đơn hàng</a>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

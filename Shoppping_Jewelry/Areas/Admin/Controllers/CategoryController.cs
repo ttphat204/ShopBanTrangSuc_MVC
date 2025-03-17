@@ -7,9 +7,7 @@ using Shoppping_Jewelry.Repository;
 namespace Shoppping_Jewelry.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
-
-
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly DataContext _dataContext;

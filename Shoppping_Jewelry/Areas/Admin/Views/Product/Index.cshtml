@@ -15,12 +15,14 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col" style="text-align:center">Tên sản phẩm</th>
+            <th scope="col" style="text-align:center">Số lượng sản phẩm</th>
+            <th scope="col" style="text-align:center">Số đã bán</th>
             <th scope="col" style="text-align:center">Giá sản phẩm</th>
             <th scope="col" style="text-align:center">Mô tả</th>
             <th scope="col" style="text-align:center">Hình ảnh</th>
             <th scope="col" style="text-align:center">Danh mục</th>
             <th scope="col" style="text-align:center">Thương hiệu</th>
-            <th scope="col" style="text-align:center">Quản lý</th>
+            <th scope="col" style="text-align:center">Hành động</th>
         </tr>
     </thead>
     <tbody style="text-align:center">
@@ -29,6 +31,8 @@
             <tr>
                 <th scope="row">@item.Id</th>
                 <td>@item.Name</td>
+                <td><b>@item.Quantity</b><br/><a asp-action="AddQuantity" asp-controller="Product" asp-route-Id="@item.Id">Thêm số lượng</a></td>
+                <td><b>@item.Sold</b></td>
                 <td>@item.Price.ToString("#,##0 VNĐ")</td>
                 <td>@Html.Raw(item.Description)</td>
                 <td><img src="~/media/products/@item.Image" width="100" height="80" /></td>

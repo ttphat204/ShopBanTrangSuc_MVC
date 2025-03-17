@@ -65,13 +65,17 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <h4 class="text-center mb-4">Admin Dashboard</h4>
-        <a asp-controller="Home"><i class="fa fa-home me-2"></i> Trang chủ</a>
-        <a asp-controller="Order"><i class="fa fa-list me-2"></i> Đơn hàng</a>
+        <a asp-controller="Dashboard"><i class="fa fa-home me-2"></i> Trang chủ</a>
+        <a asp-controller="Slider"><i class="fa fa-images me-2"></i> SLider</a>
+        <a asp-controller="Order"><i class="fa fa-shopping-cart me-2"></i> Đơn hàng</a>
         <a asp-controller="Product"><i class="fa fa-gem me-2"></i> Sản phẩm</a>
         <a asp-controller="Category"><i class="fa fa-folder me-2"></i> Danh mục</a>
         <a asp-controller="Brand"><i class="fa fa-tags me-2"></i> Thương hiệu</a>
         <a asp-controller="User"><i class="fa fa-users me-2"></i> Người quản lý</a>
-        <a asp-controller="Role"><i class="fa fa-user-cog me-2"></i>Roles</a>
+        <a asp-controller="User" asp-action="UserList"><i class="fa fa-users me-2"></i> Người dùng</a>
+        <a asp-controller="Role"><i class="fa fa-user-shield me-2"></i> Roles</a>
+        <a asp-controller="Contact"><i class="fa fa-address-book me-2"></i> Thông tin liên hệ</a>
+        <a asp-controller="Shipping"><i class="fa fa-address-book me-2"></i> Shipping</a>
 
     </div>
 
@@ -101,7 +105,45 @@
             if(message != '') Swal.fire(message);
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            //Lấy tỉnh thành
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm',function(data_tinh){
+                if(data_tinh.error==0){
+                   $.each(data_tinh.data, function (key_tinh,val_tinh) {
+                      $("#tinh").append('<option value="'+val_tinh.id+'">'+val_tinh.full_name+'</option>');
+                   });
+                   $("#tinh").change(function(e){
+                        var idtinh=$(this).val();
+                        //Lấy quận huyện
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/'+idtinh+'.htm',function(data_quan){
+                            if(data_quan.error==0){
+                               $("#quan").html('<option value="0">Quận Huyện</option>');
+                               $("#phuong").html('<option value="0">Phường Xã</option>');
+                               $.each(data_quan.data, function (key_quan,val_quan) {
+                                  $("#quan").append('<option value="'+val_quan.id+'">'+val_quan.full_name+'</option>');
+                               });
+                               //Lấy phường xã
+                               $("#quan").change(function(e){
+                                    var idquan=$(this).val();
+                                    $.getJSON('https://esgoo.net/api-tinhthanh/3/'+idquan+'.htm',function(data_phuong){
+                                        if(data_phuong.error==0){
+                                           $("#phuong").html('<option value="0">Phường Xã</option>');
+                                           $.each(data_phuong.data, function (key_phuong,val_phuong) {
+                                              $("#phuong").append('<option value="'+val_phuong.id+'">'+val_phuong.full_name+'</option>');
+                                           });
+                                        }
+                                    });
+                               });
 
+                            }
+                        });
+                   });
+
+                }
+            });
+         });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,6 +1,8 @@
 ﻿using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Shoppping_Jewelry.Areas.Admin.Repository;
 using Shoppping_Jewelry.Models;
 using Shoppping_Jewelry.Repository;
@@ -48,30 +50,47 @@ namespace Shoppping_Jewelry.Controllers
                 TempData["error"] = "Giỏ hàng trống, không thể đặt hàng.";
                 return RedirectToAction("Index", "Cart");
             }
+            // Lấy shipping cost từ cookie
+            var shippingPriceCookie = Request.Cookies["ShippingPrice"];
+            decimal shippingPrice = 0;
+            if (shippingPriceCookie != null)
+            {
+                shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceCookie);
+            }
 
             var orderCode = Guid.NewGuid().ToString();
             var orderItem = new OrderModel
             {
                 OrderCode = orderCode,
+                ShippingCost = shippingPrice,
                 UserName = email,
                 Status = 1,
                 CreateDate = DateTime.Now
             };
 
             _dataContext.Add(orderItem);
+            _dataContext.SaveChanges();
+            Console.WriteLine($"Order saved with ShippingCost: {orderItem.ShippingCost}, ID: {orderItem.Id}");
             foreach (var cart in cartItems)
             {
-                var orderDetails = new OrderDetailModel
-                {
-                    UserName = email,
-                    OrderCode = orderCode,
-                    ProductId = cart.ProductId,
-                    Price = cart.Price,
-                    Quantity = cart.Quantity
-                };
+                var orderDetails = new OrderDetailModel();
+
+                orderDetails.UserName = email;
+                orderDetails.OrderCode = orderCode;
+
+                orderDetails.ProductId = cart.ProductId;
+                orderDetails.Price = cart.Price;
+                orderDetails.Quantity = cart.Quantity;
+
+                var product = await _dataContext.Products.Where(p => p.Id == cart.ProductId).FirstAsync();
+                product.Quantity -= cart.Quantity;
+                product.Sold += cart.Quantity;
+
+                _dataContext.Update(product);
                 _dataContext.Add(orderDetails);
+                _dataContext.SaveChanges();
             }
-            _dataContext.SaveChanges();
+
 
             HttpContext.Session.Remove("Cart");
 
@@ -96,7 +115,6 @@ namespace Shoppping_Jewelry.Controllers
                 TempData["warning"] = TempData["warning"]?.ToString() + " Gửi email thông báo cho admin thất bại.";
                 // Có thể ghi log lỗi ở đây
             }
-
             TempData["success"] = "Đặt hàng thành công, vui lòng chờ duyệt.";
             return RedirectToAction("Index", "Cart");
         }

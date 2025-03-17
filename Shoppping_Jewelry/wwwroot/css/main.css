@@ -226,7 +226,6 @@ a#scrollUp i{
 }
 
 .navbar-collapse.collapse{
-  padding-left: 0;
 }
 
 .mainmenu ul li{
@@ -352,7 +351,6 @@ ul.sub-menu {
 
 .footer-top .container {
   border-bottom: 1px solid #E0E0DA;
-  padding-bottom: 20px;
 }
 
 .companyinfo {
