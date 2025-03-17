@@ -36,11 +36,6 @@ namespace Shoppping_Jewelry.Controllers
                 return StatusCode(500, "Lỗi khi tạo thanh toán: " + ex.Message);
             }
         }
-        [HttpGet]
-        public IActionResult PaymentCallBack()
-        {
-            var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
-            return View(response);
-        }
+
     }
 }

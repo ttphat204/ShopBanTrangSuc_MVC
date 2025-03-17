@@ -10,6 +10,7 @@ namespace Shoppping_Jewelry.Repository
         {
 
         }
+        public DbSet<MomoInfoModel> MomoInfos { get; set; }
         public DbSet<BrandModel> Brands { get; set; }
         public DbSet<ProductModel> Products { get; set; }
         public DbSet<ShippingModel> Shippings { get; set; }

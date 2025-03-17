@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Shoppping_Jewelry.Areas.Admin.Repository;
 using Shoppping_Jewelry.Models;
 using Shoppping_Jewelry.Repository;
+using Shoppping_Jewelry.Services.Momo;
 
 namespace Shoppping_Jewelry.Controllers
 {
@@ -13,11 +14,12 @@ namespace Shoppping_Jewelry.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly IEmailSender _emailSender;
-
-        public CheckoutController(IEmailSender emailSender, DataContext context)
+        private readonly IMomoService _momoService;
+        public CheckoutController(IEmailSender emailSender, DataContext context, IMomoService momoService)
         {
             _emailSender = emailSender;
             _dataContext = context;
+            _momoService = momoService;
         }
 
         public IActionResult Checkout()
@@ -40,6 +42,65 @@ namespace Shoppping_Jewelry.Controllers
             }
             return ProcessOrder(email).Result;
         }
+        [HttpGet]
+        public async Task<IActionResult> PaymentCallBack(MomoInfoModel model)
+        {
+            var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
+            var requestQuery = HttpContext.Request.Query;
+
+            if (requestQuery["resultCode"] != "0") // giao dịch không thành công
+            {
+                var newMomoInsert = new MomoInfoModel
+                {
+                    OrderId = requestQuery["orderId"],
+                    FullName = User.FindFirstValue(ClaimTypes.Email),
+                    Amount = decimal.Parse(requestQuery["amount"]),
+                    OrderInfo = requestQuery["orderInfo"],
+                    DatePaid = DateTime.Now
+                };
+
+                _dataContext.Add(newMomoInsert);
+                await _dataContext.SaveChangesAsync();
+            }
+            else
+            {
+                TempData["success"] = "Đã hủy giao dịch MoMo.";
+                return RedirectToAction("Index", "Cart");
+            }
+
+
+
+            //Mai kiểm tra mại bằng momo test
+            //if (string.Equals(requestQuery["resultCode"], "0", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    var newMomoInsert = new MomoInfoModel
+            //    {
+            //        OrderId = requestQuery["orderId"],
+            //        FullName = User?.FindFirstValue(ClaimTypes.Email) ?? "Unknown",
+            //        Amount = decimal.TryParse(requestQuery["amount"], out decimal amount) ? amount : 0,
+            //        OrderInfo = requestQuery["orderInfo"],
+            //        DatePaid = DateTime.Now
+            //    };
+
+            //    _dataContext.Add(newMomoInsert);
+            //    await _dataContext.SaveChangesAsync();
+            //}
+            //else
+            //{
+            //    TempData["success"] = "Đã hủy giao dịch MoMo.";
+            //    return RedirectToAction("Index", "Cart");
+            //}
+
+
+
+
+            //var checkoutResult = await Checkout(requestQuery["orderId"]);
+            // return View(checkoutResult);
+
+            return View(response);
+        }
+
+
 
         private async Task<IActionResult> ProcessOrder(string email)
         {

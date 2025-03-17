@@ -1,11 +1,13 @@
-﻿@* @model MomoExecuteResponseModel *@
+﻿@using Shoppping_Jewelry.Models.Momo
+@model MomoExecuteResponseModel
 
-@* @{ *@
-@* 	ViewData["Title"] = "Kết quả thanh toán thành công"; *@
-@* } *@
+@{
+    ViewData["Title"] = "Kết quả thanh toán thành công";
+}
 
-@* <h5>Thanh toán Momo thành công với: </h5> *@
-@* <p>OrderId: @Model.orderId</p> *@
-@* <p>Thông tin đơn hàng: @Model.OrderInfo</p> *@
-@* <p>Số tiền: @Model.amount</p> *@
-@* <5>Xem <a asp-controller="Account" asp-action="History">Lịch sử đặt hàng</a></5> *@
+<h5>Thanh toán MoMo thành công với: </h5>
+<p>Họ tên: @Model.FullName</p>
+<p>OrderId: @Model.OrderId</p>
+<p>Thông tin đơn hàng: @Model.OrderInfo</p>
+<p>Số tiền: @Model.Amount VND</p>
+<h5>Xem <a asp-controller="Account" asp-action="History">Lịch sử đặt hàng</a></h5>
